@@ -1,0 +1,52 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}
+    Login
+{% endblock %}
+
+{% block head %}
+    {{ super() }}
+    <link href="{{ url_for('static', filename='css/login.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+    <div class="login-container d-flex align-items-center justify-content-center">
+        <div class="login-card row shadow-lg overflow-hidden justify-content-center">
+
+
+            <div class="col-lg-6 p-5 d-flex flex-column justify-content-center bg-white">
+                <div class="mb-4 text-center text-lg-start">
+                    <div class="logo-placeholder mb-4">
+
+                        <span class="fs-3 fw-bold text-danger">Minha Cantina</span>
+                    </div>
+                    <h2 class="fw-bold mb-1">Sistema de Gestão</h2>
+                    <p class="text-muted">Entre com os dados de administrador para continuar.</p>
+                </div>
+
+                <form>
+                    <div class="mb-3">
+                        <label for="usernameMC" class="form-label fw-semibold">Usuário</label>
+                        <input id="usernameMC" name="usernameMC" type="text" class="form-control custom-input" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="passwordMC" class="form-label fw-semibold">Senha</label>
+                        <input id="passwordMC" name="passwordMC" type="password" class="form-control custom-input"
+                               required>
+                    </div>
+
+                    <button type="submit"
+                            class="btn btn-danger w-100 py-2 mb-4 fw-bold shadow-sm">
+                        Entrar
+                    </button>
+
+                    {% if erro %}
+                        <p class="text-danger">{{ erro }}</p>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

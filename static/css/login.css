@@ -1,0 +1,70 @@
+
+.login-container {
+    min-height: 100%;
+    background-color: #f8f9fa;
+    padding: 20px;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 1000px;
+    border-radius: 20px;
+    min-height: 600px;
+    background-color: #fff;
+}
+
+.custom-input {
+    padding: 0.75rem 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+}
+
+    .custom-input:focus {
+        border-color: #6366f1;
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    }
+
+.btn-primary {
+    background-color: #6366f1;
+    border: none;
+    border-radius: 10px;
+}
+
+    .btn-primary:hover {
+        background-color: #4f46e5;
+    }
+
+.branding-panel {
+    background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+
+    .branding-panel::before {
+        content: "";
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        top: -100px;
+        right: -100px;
+    }
+
+    .branding-panel::after {
+        content: "";
+        position: absolute;
+        width: 200px;
+        height: 200px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 50%;
+        bottom: -50px;
+        left: -50px;
+    }
+
+.branding-content {
+    position: relative;
+    z-index: 2;
+}
+
