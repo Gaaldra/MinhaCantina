@@ -9,11 +9,11 @@ def inject_now():
 
 @app.route('/')
 def index():
-    return render_template('public/index.html')
+    return render_template('pages/index.html')
 
 @app.route('/login')
 def login():
-    return render_template('public/login.html')
+    return render_template('pages/login.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
