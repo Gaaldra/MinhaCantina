@@ -4,7 +4,7 @@ from datetime import datetime
 from dotenv import load_dotenv
 from flask import Flask, render_template, request, redirect, flash
 from flask_login import LoginManager, UserMixin, login_required, login_user
-from flask_migrate import Migrate
+from flask_migrate import Migrate, upgrade
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -20,6 +20,9 @@ login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 
 migrate = Migrate(app, db)
+
+with app.app_context():
+    upgrade()
 
 
 class User(UserMixin, db.Model):
