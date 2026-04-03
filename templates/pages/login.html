@@ -24,7 +24,7 @@
                     <p class="text-muted">Entre com os dados de administrador para continuar.</p>
                 </div>
 
-                <form>
+                <form action="/login" method="post">
                     <div class="mb-3">
                         <label for="usernameMC" class="form-label fw-semibold">Usuário</label>
                         <input id="usernameMC" name="usernameMC" type="text" class="form-control custom-input" required>
@@ -40,10 +40,16 @@
                             class="btn btn-danger w-100 py-2 mb-4 fw-bold shadow-sm">
                         Entrar
                     </button>
-
-                    {% if erro %}
-                        <p class="text-danger">{{ erro }}</p>
-                    {% endif %}
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="alert alert-danger"
+                                     role="alert">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
                 </form>
             </div>
         </div>
