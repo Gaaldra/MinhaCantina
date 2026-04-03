@@ -22,7 +22,7 @@ def login():
 
 @app.route('/dashboard')
 def dashboard():
-    return render_template('manage/dashboard.html')
+    return render_template('manage/dashboard.html', total_estoque=0.00, estoque_baixo_count=0, categorias_count=0)
 
 
 if __name__ == '__main__':
