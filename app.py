@@ -39,6 +39,15 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
 
 
+class Product(db.Model):
+    __tablename__ = "products"
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(80), nullable=False, unique=True)
+    price = db.Column(db.Float, nullable=False)
+    description = db.Column(db.Text, nullable=True)
+
+
 @app.cli.command("create-user")
 def create_user():
     import click
@@ -49,7 +58,8 @@ def create_user():
         click.echo("Erro: Usuário já existe.")
         return
 
-    new_user = User(username=username)
+    new_user = User()
+    new_user.username = username
     new_user.set_password(password)
     db.session.add(new_user)
     db.session.commit()
