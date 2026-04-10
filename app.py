@@ -78,7 +78,14 @@ def inject_now():
 
 @app.route('/')
 def index():
-    return render_template('pages/index.html')
+    all_products = []
+    try:
+        stmt = db.select(Product).limit(20)
+        all_products = db.session.execute(stmt).scalars().all()
+    except Exception as e:
+        print(e)
+
+    return render_template('pages/index.html', products=all_products)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -101,7 +108,30 @@ def login():
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    return render_template('manage/dashboard.html', total_estoque=0.00, estoque_baixo_count=0, categorias_count=0)
+    stmt = db.select(Product)
+    all_products = db.session.execute(stmt).scalars().all()
+    return render_template('manage/dashboard.html', products=all_products, total_estoque=0.00, estoque_baixo_count=0, categorias_count=0)
+
+@app.route('/criar_produto', methods=['GET', 'POST'])
+@login_required
+def create_product():
+    if request.method == 'POST':
+        product = Product()
+        product.name = request.form['productName']
+        product.price = request.form['productPrice']
+        product.description = request.form['productDescription']
+
+        try:
+            db.session.add(product)
+            db.session.commit()
+            flash('Produto criado com sucesso!', 'success')
+            return redirect('/dashboard')
+        except Exception as e:
+            db.session.rollback()
+            print(e)
+            flash('Erro ao criar o produto!', 'danger')
+            return redirect('/dashboard')
+    return render_template('manage/create_product.html', produto=None)
 
 
 if __name__ == '__main__':
