@@ -98,11 +98,13 @@
 
     <section class="container mt-4">
         <div class="row mb-4">
-            {% if products %}
-                <span>Tem produtos</span>
+            {% for product in products %}
+                {% include 'components/product_card.html' %}
             {% else %}
-                <span>Nenhum produto encontrado</span>
-            {% endif %}
+                <div class="col-12 text-center">
+                    <p>Nenhum produto encontrado.</p>
+                </div>
+            {% endfor %}
         </div>
     </section>
 {% endblock %}

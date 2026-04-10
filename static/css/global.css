@@ -18,3 +18,14 @@ footer{
     color: white;
     padding-top: 2.5rem;
 }
+
+.badge-stock {
+    color: white;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
