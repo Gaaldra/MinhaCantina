@@ -1,0 +1,32 @@
+<div class="col-sm-6 col-md-4 col-lg-3 my-1">
+    <div class="card card-product shadow-sm h-100">
+        {% set status_random = ['Disponivel', 'Esgotado', 'PoucasUnidades'] | random %}
+
+        {% if status_random == 'Disponivel' %}
+            {% set status_label = 'Disponível' %}
+            {% set status_color = 'bg-success' %}
+        {% elif status_random == 'Esgotado' %}
+            {% set status_label = 'Esgotado' %}
+            {% set status_color = 'bg-danger' %}
+        {% else %}
+            {% set status_label = 'Poucas Unidades' %}
+            {% set status_color = 'bg-warning' %}
+        {% endif %}
+
+        <span class="badge-stock {{ status_color }}">{{ status_label }}</span>
+
+        <img src="{{ product.imagem_url or '/static/img/placeholder.webp' }}" class="card-img-top" alt="{{ product.name }}">
+
+        <div class="card-body">
+            <h5 class="card-title fw-bold mb-1">{{ product.name }}</h5>
+            <p class="text-muted small mb-2">Inclassificado</p>
+            <div class="d-flex justify-content-between align-items-center">
+                <span class="price-tag">R$ {{ "%.2f"|format(product.price)|replace('.', ',') }}</span>
+
+                <a href="#" class="btn btn-outline-primary btn-sm rounded-pill">
+                    Ver mais
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
