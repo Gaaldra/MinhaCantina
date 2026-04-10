@@ -6,6 +6,8 @@ from flask import Flask, render_template, request, redirect, flash
 from flask_login import LoginManager, UserMixin, login_required, login_user
 from flask_migrate import Migrate, upgrade
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import func
+from sqlalchemy.orm import joinedload
 from werkzeug.security import generate_password_hash, check_password_hash
 
 load_dotenv()
@@ -46,12 +48,21 @@ class Product(db.Model):
     name = db.Column(db.String(80), nullable=False, unique=True)
     price = db.Column(db.Float, nullable=False)
     description = db.Column(db.Text, nullable=True)
+    quantity = db.Column(db.Integer, nullable=False, default=0)
+    minimum_quantity = db.Column(db.Integer, default=5, nullable=False)
+
+    category_id = db.Column(db.Integer, db.ForeignKey('categories.id'), nullable=False)
+
+    category = db.relationship('Category', back_populates='products')
+
 
 class Category(db.Model):
     __tablename__ = "categories"
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False, unique=True)
+
+    products = db.relationship('Product', back_populates='category', lazy=True)
 
 
 @app.cli.command("create-user")
@@ -86,8 +97,9 @@ def inject_now():
 def index():
     all_products = []
     try:
-        stmt = db.select(Product).limit(20)
+        stmt = db.select(Product).options(joinedload(Product.category)).limit(20)
         all_products = db.session.execute(stmt).scalars().all()
+        print(f"Produtos encontrados: {len(all_products)}")
     except Exception as e:
         print(e)
 
@@ -114,9 +126,32 @@ def login():
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    stmt = db.select(Product)
-    all_products = db.session.execute(stmt).scalars().all()
-    return render_template('manage/dashboard.html', products=all_products, total_estoque=0.00, estoque_baixo_count=0, categorias_count=0)
+    all_products = []
+    categories_count = 0
+    total_inventory_value = 0
+    low_stock_count = 0
+
+    try:
+        stmt = db.select(Product).options(joinedload(Product.category)).limit(20)
+        all_products = db.session.execute(stmt).scalars().all()
+
+        categories_count = db.session.execute(db.select(func.count(Category.id))).scalar_one()
+
+        inventory_stmt = db.select(func.sum(Product.price * Product.quantity))
+        total_inventory_value = db.session.execute(inventory_stmt).scalar() or 0.0
+
+        low_stock_stmt = db.select(func.count(Product.id)).where(Product.quantity < Product.minimum_quantity)
+        low_stock_count = db.session.execute(low_stock_stmt).scalar_one()
+
+    except Exception as e:
+        print(e)
+
+    return render_template('manage/dashboard.html',
+                           products=all_products,
+                           total_inventory_value=total_inventory_value,
+                           estoque_baixo_count=low_stock_count,
+                           categories_count=categories_count)
+
 
 @app.route('/criar_produto', methods=['GET', 'POST'])
 @login_required

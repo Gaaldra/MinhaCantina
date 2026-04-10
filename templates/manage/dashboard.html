@@ -35,7 +35,7 @@
                 <div class="card bg-success text-white shadow-sm">
                     <div class="card-body">
                         <h6 class="card-title">Valor em Estoque</h6>
-                        <h2 class="mb-0">R$ {{ "%.2f"|format(total_estoque) }}</h2>
+                        <h2 class="mb-0">R$ {{ "%.2f"|format(total_inventory_value) }}</h2>
                     </div>
                 </div>
             </div>
@@ -51,7 +51,7 @@
                 <div class="card bg-info text-white shadow-sm">
                     <div class="card-body">
                         <h6 class="card-title">Categorias</h6>
-                        <h2 class="mb-0">{{ categorias_count }}</h2>
+                        <h2 class="mb-0">{{ categories_count }}</h2>
                     </div>
                 </div>
             </div>
@@ -87,19 +87,18 @@
                                     <tr>
                                         <td>#{{ product.id }}</td>
                                         <td><strong>{{ product.name }}</strong></td>
-{#                                        <td><span class="badge bg-light text-dark border">{{ product.categoria }}</span>#}
-                                        <td><span class="badge bg-light text-dark border">Nenhuma</span>
+                                        <td><span
+                                                class="badge bg-light text-dark border">{{ product.category.name }}</span>
                                         </td>
                                         <td>R$ {{ "%.2f"|format(product.price) }}</td>
                                         <td>
-                                            0
-{#                                            {% if product.quantidade <= 5 %}#}
-{#                                                <span class="text-danger fw-bold">#}
-{#                                                <i class="fas fa-exclamation-triangle"></i> {{ product.quantidade }}#}
-{#                                            </span>#}
-{#                                            {% else %}#}
-{#                                                {{ product.quantidade }}#}
-{#                                            {% endif %}#}
+                                            {% if product.quantity <= 5 %}
+                                                <span class="text-danger fw-bold">
+                                                <i class="fas fa-exclamation-triangle"></i> {{ product.quantity }}
+                                            </span>
+                                            {% else %}
+                                                {{ product.quantity }}
+                                            {% endif %}
                                         </td>
                                         <td class="text-center">
                                             <div class="btn-group btn-group-sm">
