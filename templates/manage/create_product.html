@@ -1,0 +1,63 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}
+    Criar Novo Produto
+{% endblock %}
+
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/create_product.css') }}" >
+{% endblock %}
+
+{% block content %}
+    <div class="mc-page-container">
+        <header class="mc-header shadow-sm">
+            <div class="container d-flex align-items-center justify-content-between">
+                <h2 class="mc-title">Novo Produto</h2>
+                <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary btn-sm">Voltar</a>
+            </div>
+        </header>
+
+        <main class="container my-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="mc-form-card shadow p-4 bg-white rounded">
+
+                        <form action="{{ url_for('create_product') }}" method="post">
+                            <div class="row g-4">
+                                <div class="col-md-7">
+                                    <div class="mb-3">
+                                        <label for="nome" class="form-label fw-bold">Nome do Produto</label>
+                                        <input type="text" name="productName" id="nome" class="form-control form-control-lg"
+                                               placeholder="Ex: Coca-Cola 350ml" required>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="preco" class="form-label fw-bold">Preço (R$)</label>
+                                            <input type="number" name="productPrice" id="preco" step="0.01"
+                                                   class="form-control"
+                                                   placeholder="0,00" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label for="descricao" class="form-label fw-bold">Descrição</label>
+                                        <textarea name="productDescription" id="descricao" class="form-control" rows="3"
+                                                  placeholder="Detalhes do produto..."></textarea>
+                                    </div>
+
+                                    <button type="submit" class="mc-btn-save w-100 btn btn-primary py-2" id="btnSalvar">
+                                        <span id="btnText">Cadastrar Produto</span>
+                                        <span id="btnSpinner" class="spinner-border spinner-border-sm d-none"
+                                              role="status"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+{% endblock %}

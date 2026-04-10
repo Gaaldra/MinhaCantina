@@ -12,12 +12,12 @@
     <div class="container mt-4">
         <div class="row mb-4">
             <div class="col-md-8">
-                <h1 class="display-5">Dashboard de Produtos</h1>
+                <h1 class="display-5">Dashboard de products</h1>
                 <p class="text-muted">Visão geral do inventário e estatísticas da cantina.</p>
             </div>
             <div class="col-md-4 text-end align-self-center">
-                <a href="#" class="btn btn-primary">
-                    <i class="fa-solid fa-plus"></i> Novo Produto
+                <a href="{{ url_for('create_product') }}" class="btn btn-primary">
+                    <i class="fa-solid fa-plus"></i> Novo produto
                 </a>
             </div>
         </div>
@@ -27,7 +27,7 @@
                 <div class="card bg-primary text-white shadow-sm">
                     <div class="card-body">
                         <h6 class="card-title">Total de Itens</h6>
-                        <h2 class="mb-0">{{ produtos|length }}</h2>
+                        <h2 class="mb-0">{{ products|length }}</h2>
                     </div>
                 </div>
             </div>
@@ -61,9 +61,9 @@
             <div class="col-12">
                 <div class="card shadow-sm">
                     <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">Lista de Produtos</h5>
+                        <h5 class="mb-0">Lista de products</h5>
                         <div class="input-group input-group-sm" style="width: 250px;">
-                            <input type="text" class="form-control" placeholder="Pesquisar produto...">
+                            <input type="text" class="form-control" placeholder="Pesquisar product...">
                             <button class="btn btn-outline-secondary" type="button">
                                 <i class="fa-solid fa-search"></i>
                             </button>
@@ -83,21 +83,23 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {% for produto in produtos %}
+                                {% for product in products %}
                                     <tr>
-                                        <td>#{{ produto.id }}</td>
-                                        <td><strong>{{ produto.nome }}</strong></td>
-                                        <td><span class="badge bg-light text-dark border">{{ produto.categoria }}</span>
+                                        <td>#{{ product.id }}</td>
+                                        <td><strong>{{ product.name }}</strong></td>
+{#                                        <td><span class="badge bg-light text-dark border">{{ product.categoria }}</span>#}
+                                        <td><span class="badge bg-light text-dark border">Nenhuma</span>
                                         </td>
-                                        <td>R$ {{ "%.2f"|format(produto.preco) }}</td>
+                                        <td>R$ {{ "%.2f"|format(product.price) }}</td>
                                         <td>
-                                            {% if produto.quantidade <= 5 %}
-                                                <span class="text-danger fw-bold">
-                                                <i class="fas fa-exclamation-triangle"></i> {{ produto.quantidade }}
-                                            </span>
-                                            {% else %}
-                                                {{ produto.quantidade }}
-                                            {% endif %}
+                                            0
+{#                                            {% if product.quantidade <= 5 %}#}
+{#                                                <span class="text-danger fw-bold">#}
+{#                                                <i class="fas fa-exclamation-triangle"></i> {{ product.quantidade }}#}
+{#                                            </span>#}
+{#                                            {% else %}#}
+{#                                                {{ product.quantidade }}#}
+{#                                            {% endif %}#}
                                         </td>
                                         <td class="text-center">
                                             <div class="btn-group btn-group-sm">
