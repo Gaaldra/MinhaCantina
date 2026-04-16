@@ -23,6 +23,8 @@ db = SQLAlchemy(app)
 
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
+login_manager.login_message = 'Acesso negado. Por favor, faça login para continuar.'
+login_manager.login_message_category = 'danger'
 
 migrate = Migrate(app, db)
 
@@ -156,26 +158,28 @@ def dashboard():
                            estoque_baixo_count=low_stock_count,
                            categories_count=categories_count)
 
-@app.route('/produto/editar/<int:id>', methods=['GET', 'POST'])
+@app.route('/produto/editar/<int:product_id>', methods=['GET', 'POST'])
 @app.route('/produto/criar', methods=['GET', 'POST'])
 @login_required
-def save_product(id=None):
-    product = db.session.get(Product, id) if id else Product()
+def save_product(product_id=None):
+    is_edit = product_id is not None
+    product = db.session.get(Product, product_id) if product_id else Product()
 
     if request.method == 'POST':
-        product.name = request.form.get('productName')
-        product.price = request.form.get('productPrice')
-        product.description = request.form.get('productDescription')
-        product.category_id = request.form.get('categoryId')
+        try:
+            product.name = request.form.get('productName')
+            product.price = float(request.form.get('productPrice', 0))
+            product.description = request.form.get('productDescription')
+            product.category_id = int(request.form.get('categoryId', 1))
+        except (ValueError, TypeError):
+            flash('Erro nos dados informados!', 'danger')
+            return redirect(request.url)
 
         file = request.files.get('productImage')
-
-        if file is not None:
+        if file and file.filename:
             try:
                 img = Image.open(file)
-
                 img = img.resize((1080, 1080), Image.Resampling.LANCZOS)
-
                 buffer = io.BytesIO()
                 img.save(buffer, format='WEBP', quality=85)
                 file_bytes = buffer.getvalue()
@@ -187,25 +191,25 @@ def save_product(id=None):
                     add_random_suffix=False,
                     overwrite=True
                 )
-
                 product.image_url = blob.url
-
             except Exception as e:
                 print(f'Erro no processamento da imagem: {e}')
                 flash('Erro ao processar imagem!', 'danger')
                 return redirect('/dashboard')
 
-        if not id:
+        if not is_edit:
             db.session.add(product)
 
         try:
             db.session.commit()
-            flash('Produto criado com sucesso!', 'success')
+            msg = 'Produto atualizado com sucesso!' if is_edit else 'Produto criado com sucesso!'
+            flash(msg, 'success')
             return redirect('/dashboard')
         except Exception as e:
             db.session.rollback()
-            print(e)
-            flash('Erro ao criar o produto!', 'danger')
+            print(f'Erro no banco: {e}')
+            msg = 'Erro ao atualizar o produto!' if is_edit else 'Erro ao criar o produto!'
+            flash(msg, 'danger')
             return redirect('/dashboard')
 
     stmt = db.Select(Category)

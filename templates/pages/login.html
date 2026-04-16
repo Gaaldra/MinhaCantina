@@ -1,5 +1,7 @@
 {% extends 'layout/base.html' %}
 
+{% block alerts %}{% endblock %}
+
 {% block title %}
     Login
 {% endblock %}
@@ -40,16 +42,8 @@
                             class="btn btn-danger w-100 py-2 mb-4 fw-bold shadow-sm">
                         Entrar
                     </button>
-                    {% with messages = get_flashed_messages(with_categories=true) %}
-                        {% if messages %}
-                            {% for category, message in messages %}
-                                <div class="alert alert-danger"
-                                     role="alert">
-                                    {{ message }}
-                                </div>
-                            {% endfor %}
-                        {% endif %}
-                    {% endwith %}
+
+                    {% include 'components/modal_flash_message.html' %}
                 </form>
             </div>
         </div>

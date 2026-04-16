@@ -10,6 +10,7 @@
 
 {% block content %}
     <div class="container mt-4">
+
         <div class="row mb-4">
             <div class="col-md-8">
                 <h1 class="display-5">Dashboard de products</h1>
@@ -35,7 +36,7 @@
                 <div class="card bg-success text-white shadow-sm">
                     <div class="card-body">
                         <h6 class="card-title">Valor em Estoque</h6>
-                        <h2 class="mb-0">R$ {{ "%.2f"|format(total_inventory_value) }}</h2>
+                        <h2 class="mb-0">R$ {{ "%.2f"|format(total_inventory_value)|replace('.', ',') }}</h2>
                     </div>
                 </div>
             </div>
@@ -69,6 +70,7 @@
                             </button>
                         </div>
                     </div>
+
                     <div class="card-body p-0">
                         <div class="table-responsive">
                             <table class="table table-hover mb-0">
@@ -90,7 +92,7 @@
                                         <td><span
                                                 class="badge bg-light text-dark border">{{ product.category.name }}</span>
                                         </td>
-                                        <td>R$ {{ "%.2f"|format(product.price) }}</td>
+                                        <td>R$ {{ "%.2f"|format(product.price)|replace('.', ',') }}</td>
                                         <td>
                                             {% if product.quantity <= 5 %}
                                                 <span class="text-danger fw-bold">
@@ -102,7 +104,8 @@
                                         </td>
                                         <td class="text-center">
                                             <div class="btn-group btn-group-sm">
-                                                <a href="{{ url_for('save_product', id=product.id) }}" class="btn btn-outline-primary" title="Editar">
+                                                <a href="{{ url_for('save_product', product_id=product.id) }}"
+                                                   class="btn btn-outline-primary" title="Editar">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
                                                 <button type="button" class="btn btn-outline-danger" title="Excluir">

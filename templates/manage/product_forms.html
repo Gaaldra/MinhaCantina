@@ -23,7 +23,7 @@
                 <div class="col-lg-8">
                     <div class="mc-form-card shadow p-4 bg-white rounded">
 
-                        <form id="formProduct" action="{{ url_for('save_product', id=product.id) if product.id else url_for('save_product') }}"  method="post"
+                        <form id="formProduct" action="{{ url_for('save_product', product_id=product.id) if product.id else url_for('save_product') }}"  method="post"
                               enctype="multipart/form-data">
                             <div class="row g-4">
 
@@ -63,7 +63,7 @@
                                         <div class="col-md-6 mb-3">
                                             <label for="productPrice" class="form-label fw-bold">Preço (R$)</label>
                                             <input id="productPrice" type="number" name="productPrice"
-                                                   value="{{ product.price or '' }}" step="0.01" class="form-control"
+                                                   value="{{ "%.2f"|format(product.price) or '' }}" step="0.01" class="form-control"
                                                    required>
                                         </div>
                                     </div>
