@@ -23,6 +23,8 @@ db = SQLAlchemy(app)
 
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
+login_manager.login_message = 'Acesso negado. Por favor, faça login para continuar.'
+login_manager.login_message_category = 'danger'
 
 migrate = Migrate(app, db)
 

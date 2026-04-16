@@ -1,5 +1,7 @@
 {% extends 'layout/base.html' %}
 
+{% block alerts %}{% endblock %}
+
 {% block title %}
     Login
 {% endblock %}
@@ -40,6 +42,8 @@
                             class="btn btn-danger w-100 py-2 mb-4 fw-bold shadow-sm">
                         Entrar
                     </button>
+
+                    {% include 'components/modal_flash_message.html' %}
                 </form>
             </div>
         </div>
