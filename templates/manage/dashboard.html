@@ -16,7 +16,7 @@
                 <p class="text-muted">Visão geral do inventário e estatísticas da cantina.</p>
             </div>
             <div class="col-md-4 text-end align-self-center">
-                <a href="{{ url_for('create_product') }}" class="btn btn-primary">
+                <a href="{{ url_for('save_product') }}" class="btn btn-primary">
                     <i class="fa-solid fa-plus"></i> Novo produto
                 </a>
             </div>
@@ -102,7 +102,7 @@
                                         </td>
                                         <td class="text-center">
                                             <div class="btn-group btn-group-sm">
-                                                <a href="#" class="btn btn-outline-primary" title="Editar">
+                                                <a href="{{ url_for('save_product', id=product.id) }}" class="btn btn-outline-primary" title="Editar">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
                                                 <button type="button" class="btn btn-outline-danger" title="Excluir">
