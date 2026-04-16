@@ -1,13 +1,16 @@
+import io
 import os
 from datetime import datetime
 
+from PIL import Image
 from dotenv import load_dotenv
 from flask import Flask, render_template, request, redirect, flash
 from flask_login import LoginManager, UserMixin, login_required, login_user
 from flask_migrate import Migrate, upgrade
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import func
+from sqlalchemy import func, true
 from sqlalchemy.orm import joinedload
+from vercel.blob import put
 from werkzeug.security import generate_password_hash, check_password_hash
 
 load_dotenv()
@@ -50,6 +53,7 @@ class Product(db.Model):
     description = db.Column(db.Text, nullable=True)
     quantity = db.Column(db.Integer, nullable=False, default=0)
     minimum_quantity = db.Column(db.Integer, default=5, nullable=False)
+    image_url = db.Column(db.Text, nullable=True)
 
     category_id = db.Column(db.Integer, db.ForeignKey('categories.id'), nullable=False)
 
@@ -158,9 +162,37 @@ def dashboard():
 def create_product():
     if request.method == 'POST':
         product = Product()
-        product.name = request.form['productName']
-        product.price = request.form['productPrice']
-        product.description = request.form['productDescription']
+        product.name = request.form.get('productName')
+        product.price = request.form.get('productPrice')
+        product.description = request.form.get('productDescription')
+        product.category_id = request.form.get('categoryId')
+
+        file = request.files.get('productImage')
+
+        if file is not None:
+            try:
+                img = Image.open(file)
+
+                img = img.resize((1080, 1080), Image.Resampling.LANCZOS)
+
+                buffer = io.BytesIO()
+                img.save(buffer, format='WEBP', quality=85)
+                file_bytes = buffer.getvalue()
+
+                blob = put(
+                    path=f'products/{product.name.replace(' ', '_').lower()}.webp',
+                    body=file_bytes,
+                    access='public',
+                    add_random_suffix=False,
+                    overwrite=True
+                )
+
+                product.image_url = blob.url
+
+            except Exception as e:
+                print(f'Erro no processamento da imagem: {e}')
+                flash('Erro ao processar imagem!', 'danger')
+                return redirect('/dashboard')
 
         try:
             db.session.add(product)
@@ -172,7 +204,11 @@ def create_product():
             print(e)
             flash('Erro ao criar o produto!', 'danger')
             return redirect('/dashboard')
-    return render_template('manage/create_product.html', produto=None)
+
+    stmt = db.Select(Category)
+    all_categories = db.session.execute(stmt).scalars().all()
+
+    return render_template('manage/create_product.html', categories=all_categories)
 
 
 if __name__ == '__main__':

@@ -6,7 +6,7 @@
 
 {% block head %}
     {{ super() }}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/create_product.css') }}" >
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/create_product.css') }}">
 {% endblock %}
 
 {% block content %}
@@ -23,12 +23,38 @@
                 <div class="col-lg-8">
                     <div class="mc-form-card shadow p-4 bg-white rounded">
 
-                        <form action="{{ url_for('create_product') }}" method="post">
+                        <form id="formProduct" action="{{ url_for('create_product') }}" method="post"
+                              enctype="multipart/form-data">
                             <div class="row g-4">
+
+                                <div class="col-md-5 text-center border-end">
+                                    <label class="form-label fw-bold">Imagem do Produto</label>
+
+                                    <div class="mc-image-preview mb-3 rounded">
+                                        <div id="image-placeholder" class="mc-placeholder text-muted">
+                                            <i class="bi bi-camera" style="font-size: 3rem;"></i><br>
+                                            <span>Selecione uma foto</span>
+                                        </div>
+                                        <img id="image-preview" src="" class="d-none" alt="Preview"/>
+                                    </div>
+
+                                    <div class="mt-3 text-start">
+                                        <label for="image_file" class="btn btn-outline-primary w-100">
+                                            <i class="bi bi-upload me-2"></i>Escolher Imagem
+                                        </label>
+
+                                        <input type="file" name="productImage" id="image_file" class="d-none"
+                                               accept="image/png, image/jpeg, image/webp" onchange="previewFile(this)">
+
+                                        <small class="text-muted d-block mt-2">Formatos: PNG, JPG ou WEBP</small>
+                                    </div>
+                                </div>
+
                                 <div class="col-md-7">
                                     <div class="mb-3">
                                         <label for="nome" class="form-label fw-bold">Nome do Produto</label>
-                                        <input type="text" name="productName" id="nome" class="form-control form-control-lg"
+                                        <input type="text" name="productName" id="nome"
+                                               class="form-control form-control-lg"
                                                placeholder="Ex: Coca-Cola 350ml" required>
                                     </div>
 
@@ -41,13 +67,24 @@
                                         </div>
                                     </div>
 
+                                    <div class="mb-3">
+                                        <label for="categoryId" class="form-label fw-bold">Categoria</label>
+                                        <select name="categoryId" id="categoryId" class="form-select" required>
+                                            <option value="" selected disabled>Selecione uma categoria...</option>
+                                            {% for category in categories %}
+                                                <option value="{{ category.id }}">{{ category.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
                                     <div class="mb-4">
-                                        <label for="descricao" class="form-label fw-bold">Descrição</label>
-                                        <textarea name="productDescription" id="descricao" class="form-control" rows="3"
+                                        <label for="productDescription" class="form-label fw-bold">Descrição</label>
+                                        <textarea name="productDescription" id="productDescription" class="form-control"
+                                                  rows="3"
                                                   placeholder="Detalhes do produto..."></textarea>
                                     </div>
 
-                                    <button type="submit" class="mc-btn-save w-100 btn btn-primary py-2" id="btnSalvar">
+                                    <button type="submit" class="mc-btn-save w-100 btn btn-primary py-2" id="btnCreate">
                                         <span id="btnText">Cadastrar Produto</span>
                                         <span id="btnSpinner" class="spinner-border spinner-border-sm d-none"
                                               role="status"></span>
@@ -60,4 +97,45 @@
             </div>
         </main>
     </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script>
+        function previewFile(input) {
+            const file = input.files[0];
+            const preview = document.getElementById('image-preview');
+            const placeholder = document.getElementById('image-placeholder');
+
+            if (file) {
+                if (!file.type.match('image.*')) {
+                    alert("Por favor, selecione um arquivo de imagem válido.");
+                    input.value = '';
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    preview.src = e.target.result;
+                    preview.classList.remove('d-none');
+                    placeholder.classList.add('d-none');
+                }
+                reader.readAsDataURL(file);
+            } else {
+                preview.classList.add('d-none');
+                placeholder.classList.remove('d-none');
+                preview.src = '';
+            }
+        }
+
+        document.getElementById('formProduct').onsubmit = function () {
+            const btnCreate = document.getElementById('btnCreate');
+            const btnText = document.getElementById('btnText');
+            const btnSpinner = document.getElementById('btnSpinner');
+
+            btnCreate.disabled = true;
+            btnText.innerText = 'Processando...';
+            btnSpinner.classList.remove('d-none');
+        };
+    </script>
 {% endblock %}
