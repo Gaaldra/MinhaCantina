@@ -63,7 +63,7 @@
                                         <div class="col-md-6 mb-3">
                                             <label for="productPrice" class="form-label fw-bold">Preço (R$)</label>
                                             <input id="productPrice" type="number" name="productPrice"
-                                                   value="{{ "%.2f"|format(product.price) or '' }}" step="0.01" class="form-control"
+                                                   value="{{ "%.2f"|format(product.price or 0) }}" step="0.01" class="form-control"
                                                    required>
                                         </div>
                                     </div>

@@ -36,7 +36,7 @@
                 <div class="card bg-success text-white shadow-sm">
                     <div class="card-body">
                         <h6 class="card-title">Valor em Estoque</h6>
-                        <h2 class="mb-0">R$ {{ "%.2f"|format(total_inventory_value)|replace('.', ',') }}</h2>
+                        <h2 class="mb-0">R$ {{ "%.2f"|format(total_inventory_value or 0)|replace('.', ',') }}</h2>
                     </div>
                 </div>
             </div>
@@ -92,7 +92,7 @@
                                         <td><span
                                                 class="badge bg-light text-dark border">{{ product.category.name }}</span>
                                         </td>
-                                        <td>R$ {{ "%.2f"|format(product.price)|replace('.', ',') }}</td>
+                                        <td>R$ {{ "%.2f"|format(product.price or 0)|replace('.', ',') }}</td>
                                         <td>
                                             {% if product.quantity <= 5 %}
                                                 <span class="text-danger fw-bold">
