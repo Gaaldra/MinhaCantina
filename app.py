@@ -156,12 +156,13 @@ def dashboard():
                            estoque_baixo_count=low_stock_count,
                            categories_count=categories_count)
 
-
-@app.route('/criar_produto', methods=['GET', 'POST'])
+@app.route('/produto/editar/<int:id>', methods=['GET', 'POST'])
+@app.route('/produto/criar', methods=['GET', 'POST'])
 @login_required
-def create_product():
+def save_product(id=None):
+    product = db.session.get(Product, id) if id else Product()
+
     if request.method == 'POST':
-        product = Product()
         product.name = request.form.get('productName')
         product.price = request.form.get('productPrice')
         product.description = request.form.get('productDescription')
@@ -194,8 +195,10 @@ def create_product():
                 flash('Erro ao processar imagem!', 'danger')
                 return redirect('/dashboard')
 
-        try:
+        if not id:
             db.session.add(product)
+
+        try:
             db.session.commit()
             flash('Produto criado com sucesso!', 'success')
             return redirect('/dashboard')
@@ -208,7 +211,7 @@ def create_product():
     stmt = db.Select(Category)
     all_categories = db.session.execute(stmt).scalars().all()
 
-    return render_template('manage/create_product.html', categories=all_categories)
+    return render_template('manage/product_forms.html', product=product, categories=all_categories)
 
 
 if __name__ == '__main__':
