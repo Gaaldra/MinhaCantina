@@ -156,11 +156,11 @@ def dashboard():
                            estoque_baixo_count=low_stock_count,
                            categories_count=categories_count)
 
-@app.route('/produto/editar/<int:id>', methods=['GET', 'POST'])
+@app.route('/produto/editar/<int:product_id>', methods=['GET', 'POST'])
 @app.route('/produto/criar', methods=['GET', 'POST'])
 @login_required
-def save_product(id=None):
-    product = db.session.get(Product, id) if id else Product()
+def save_product(product_id=None):
+    product = db.session.get(Product, product_id) if product_id else Product()
 
     if request.method == 'POST':
         product.name = request.form.get('productName')
@@ -195,7 +195,7 @@ def save_product(id=None):
                 flash('Erro ao processar imagem!', 'danger')
                 return redirect('/dashboard')
 
-        if not id:
+        if not product_id:
             db.session.add(product)
 
         try:
