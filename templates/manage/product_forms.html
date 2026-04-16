@@ -23,7 +23,7 @@
                 <div class="col-lg-8">
                     <div class="mc-form-card shadow p-4 bg-white rounded">
 
-                        <form id="formProduct" action="{{ url_for('save_product', id=product.id) if product.id else url_for('save_product') }}"  method="post"
+                        <form id="formProduct" action="{{ url_for('save_product', product_id=product.id) if product.id else url_for('save_product') }}"  method="post"
                               enctype="multipart/form-data">
                             <div class="row g-4">
 
